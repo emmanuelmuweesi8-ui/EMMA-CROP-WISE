@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Bugema University FMIS - Farm Management Information System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+        }
+        /* Login Page */
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e4b2e, #2d6a4f);
+            position: relative;
+        }
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 420px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: #1e4b2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 40px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: #2d6a4f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .login-box button:hover {
+            background: #1e4b2e;
+            transition: 0.3s;
+        }
+        .error {
+            color: red;
+            margin: 10px 0;
+        }
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #1e4b2e, #2d6a4f);
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-logo {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .navbar h1 {
+            font-size: 1.2rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .logout-btn {
+            background: #c00;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .logout-btn:hover {
+            background: #a00;
+        }
+        .app-container {
+            display: flex;
+        }
+        .sidebar {
+            width: 260px;
+            background: white;
+            min-height: calc(100vh - 70px);
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        .sidebar-item:hover {
+            background: #e8f5e9;
+        }
+        .sidebar-item.active {
+            background: #e8f5e9;
+            border-left: 4px solid #2d6a4f;
+            font-weight: bold;
+            color: #2d6a4f;
+        }
+        .content {
+            flex: 1;
+            padding: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .farm-image-card {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .btn {
+            background: #2d6a4f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #1e4b2e;
+        }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+        .btn-print {
+            background: #17a2b8;
+        }
+        .btn-print:hover {
+            background: #138496;
+        }
+        .btn-backup {
+            background: #6c757d;
+        }
+        .btn-backup:hover {
+            background: #5a6268;
+        }
+        .status-pending {
+            background: #ffeaa7;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .status-approved {
+            background: #55efc4;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e4b2e;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #1e4b2e;
+        }
+        h3 {
+            margin-bottom: 15px;
+            color: #2d6a4f;
+        }
+        .weather-card {
+            background: linear-gradient(135deg, #1e4b2e, #2d6a4f);
+            color: white;
+        }
+        .report-container {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1e4b2e;
+            padding-bottom: 20px;
+        }
+        .report-logo {
+            width: 70px;
+            height: 70px;
+            background: #1e4b2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 35px;
+            color: white;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .report-table th, .report-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .report-table th {
+            background: #1e4b2e;
+            color: white;
+        }
+        @media print {
+            .sidebar, .navbar, .btn, .btn-print, .logout-btn {
+                display: none !important;
+            }
+            .content {
+                margin: 0;
+                padding: 0;
+            }
+        }
+        .admin-toolbar {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-left: 5px solid #1e4b2e;
+        }
+        .admin-toolbar .btn-backup {
+            background: #2d6a4f;
+        }
+        .admin-toolbar .btn-backup:hover {
+            background: #1e4b2e;
+        }
+        .last-saved-badge {
+            font-size: 13px;
+            color: #2d6a4f;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+        /* Footer note for authorized users only */
+        .secure-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+    // ============================================
+    // DATA STORAGE WITH AUTO-BACKUP & RECOVERY
+    // ============================================
+    
+    // Check if data exists, if not, restore from backup or create default
+    function checkAndRecoverData() {
+        const keys = ['students', 'workers', 'jobcards', 'gadgets', 'crops', 'activities'];
+        let needsRestore = false;
+        
+        keys.forEach(key => {
+            if (!localStorage.getItem(key)) {
+                needsRestore = true;
+            }
+        });
+        
+        if (needsRestore) {
+            const backup = localStorage.getItem('fmis_backup');
+            if (backup) {
+                try {
+                    const backupData = JSON.parse(backup);
+                    keys.forEach(key => {
+                        if (backupData[key] && !localStorage.getItem(key)) {
+                            localStorage.setItem(key, JSON.stringify(backupData[key]));
+                        }
+                    });
+                    console.log('Data restored from backup');
+                } catch(e) {
+                    console.log('Backup restore failed, creating default data');
+                    createDefaultData();
+                }
+            } else {
+                createDefaultData();
+            }
+        }
+    }
+    
+    // Create default data
+    function createDefaultData() {
+        console.log('Creating default data...');
+        
+        localStorage.setItem('students', JSON.stringify([
+            { id: 1, name: "James Otim", program: "BSc Agriculture", year: 2, phone: "0772123456", regDate: "2024-01-15" },
+            { id: 2, name: "Grace Akello", program: "BSc Agriculture", year: 2, phone: "0772123457", regDate: "2024-01-15" },
+            { id: 3, name: "Robert Mukasa", program: "Diploma in IT", year: 1, phone: "0772123458", regDate: "2024-01-15" },
+            { id: 4, name: "Kibirige John", program: "BSc Agriculture", year: 3, phone: "0772123459", regDate: "2024-01-20" }
+        ]));
+        
+        localStorage.setItem('workers', JSON.stringify([
+            { id: 1, name: "Joseph Ssemakula", title: "Farm Supervisor", rate: 5000, phone: "0756123456", hireDate: "2023-01-10" },
+            { id: 2, name: "Jane Nalwoga", title: "Field Worker", rate: 3000, phone: "0756123457", hireDate: "2023-02-15" },
+            { id: 3, name: "Moses Kayemba", title: "Irrigation Tech", rate: 4000, phone: "0756123458", hireDate: "2023-03-20" },
+            { id: 4, name: "Suzan Namutebi", title: "Farm Worker", rate: 3500, phone: "0756123459", hireDate: "2023-04-10" }
+        ]));
+        
+        localStorage.setItem('jobcards', JSON.stringify([
+            { id: 1, cardNo: "JC001", workerId: 1, task: "Planted maize on Field A - 5 acres", hours: 8, total: 40000, status: "approved", date: "2024-01-20", approvedBy: "moses", approvedDate: "2024-01-21" },
+            { id: 2, cardNo: "JC002", workerId: 2, task: "Applied fertilizer on Field B - 3 acres", hours: 6, total: 18000, status: "approved", date: "2024-01-22", approvedBy: "moses", approvedDate: "2024-01-23" },
+            { id: 3, cardNo: "JC003", workerId: 4, task: "Harvested beans - 2 acres", hours: 5, total: 17500, status: "pending", date: "2024-01-25", approvedBy: null, approvedDate: null },
+            { id: 4, cardNo: "JC004", workerId: 1, task: "Spraying pesticides - maize field", hours: 4, total: 20000, status: "approved", date: "2024-01-28", approvedBy: "moses", approvedDate: "2024-01-29" }
+        ]));
+        
+        localStorage.setItem('gadgets', JSON.stringify([
+            { id: 1, code: "G001", name: "Digital Weighing Scale", type: "Scale", status: "available", location: "Store Room A", lastCalibration: "2024-01-01" },
+            { id: 2, code: "G002", name: "Moisture Meter Pro", type: "Meter", status: "checked_out", location: "Field B", lastCalibration: "2024-01-10" },
+            { id: 3, code: "G003", name: "GPS Handheld", type: "GPS", status: "available", location: "Field Office", lastCalibration: "2023-12-15" }
+        ]));
+        
+        localStorage.setItem('crops', JSON.stringify([
+            { id: 1, crop: "Maize", variety: "Longe 5", field: "Field A", acres: 5, plantingDate: "2024-02-01", harvestDate: "2024-05-01", expectedYield: 12500, actualYield: null, status: "Growing" },
+            { id: 2, crop: "Beans", variety: "NABE 15", field: "Field B", acres: 3, plantingDate: "2024-02-05", harvestDate: "2024-04-05", expectedYield: 3600, actualYield: null, status: "Growing" },
+            { id: 3, crop: "Cassava", variety: "NASE 14", field: "Field C", acres: 4, plantingDate: "2024-01-10", harvestDate: "2024-12-10", expectedYield: 60000, actualYield: null, status: "Growing" },
+            { id: 4, crop: "Soybean", variety: "Maksoy 3N", field: "Field D", acres: 2, plantingDate: "2024-02-10", harvestDate: "2024-05-10", expectedYield: 3600, actualYield: null, status: "Growing" }
+        ]));
+        
+        localStorage.setItem('activities', JSON.stringify([
+            { id: 1, studentId: 1, title: "Soil Sampling", description: "Collect soil samples from Field A and B", dueDate: "2024-02-10", status: "completed", grade: 85 },
+            { id: 2, studentId: 2, title: "Planting Demonstration", description: "Demonstrate proper maize planting techniques", dueDate: "2024-02-15", status: "pending", grade: null },
+            { id: 3, studentId: 4, title: "Irrigation Practice", description: "Learn drip irrigation techniques", dueDate: "2024-02-20", status: "pending", grade: null }
+        ]));
+        
+        createBackup();
+    }
+    
+    // Create backup of all data
+    function createBackup() {
+        const backup = {
+            students: JSON.parse(localStorage.getItem('students') || '[]'),
+            workers: JSON.parse(localStorage.getItem('workers') || '[]'),
+            jobcards: JSON.parse(localStorage.getItem('jobcards') || '[]'),
+            gadgets: JSON.parse(localStorage.getItem('gadgets') || '[]'),
+            crops: JSON.parse(localStorage.getItem('crops') || '[]'),
+            activities: JSON.parse(localStorage.getItem('activities') || '[]'),
+            backupDate: new Date().toISOString()
+        };
+        localStorage.setItem('fmis_backup', JSON.stringify(backup));
+        localStorage.setItem('fmis_last_saved', new Date().toLocaleString());
+        console.log('Backup created at:', new Date().toLocaleString());
+    }
+    
+    setInterval(() => {
+        createBackup();
+    }, 300000);
+    
+    function saveWithBackup(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+        createBackup();
+    }
+    
+    function exportData() {
+        const exportData = {
+            students: JSON.parse(localStorage.getItem('students') || '[]'),
+            workers: JSON.parse(localStorage.getItem('workers') || '[]'),
+            jobcards: JSON.parse(localStorage.getItem('jobcards') || '[]'),
+            gadgets: JSON.parse(localStorage.getItem('gadgets') || '[]'),
+            crops: JSON.parse(localStorage.getItem('crops') || '[]'),
+            activities: JSON.parse(localStorage.getItem('activities') || '[]'),
+            exportDate: new Date().toISOString()
+        };
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bugema_fmis_backup_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert('Data exported successfully!');
+    }
+    
+    function importData(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported.students) localStorage.setItem('students', JSON.stringify(imported.students));
+                if (imported.workers) localStorage.setItem('workers', JSON.stringify(imported.workers));
+                if (imported.jobcards) localStorage.setItem('jobcards', JSON.stringify(imported.jobcards));
+                if (imported.gadgets) localStorage.setItem('gadgets', JSON.stringify(imported.gadgets));
+                if (imported.crops) localStorage.setItem('crops', JSON.stringify(imported.crops));
+                if (imported.activities) localStorage.setItem('activities', JSON.stringify(imported.activities));
+                createBackup();
+                alert('Data imported successfully! Please refresh the page.');
+                window.location.reload();
+            } catch(e) {
+                alert('Invalid backup file');
+            }
+        };
+        reader.readAsText(file);
+    }
+    
+    checkAndRecoverData();
+    
+    function getStudents() { 
+        let data = localStorage.getItem('students');
+        if (!data) { checkAndRecoverData(); data = localStorage.getItem('students'); }
+        return JSON.parse(data || '[]'); 
+    }
+    function saveStudents(data) { saveWithBackup('students', data); }
+    
+    function getWorkers() { 
+        let data = localStorage.getItem('workers');
+        if (!data) { checkAndRecoverData(); data = localStorage.getItem('workers'); }
+        return JSON.parse(data || '[]'); 
+    }
+    function saveWorkers(data) { saveWithBackup('workers', data); }
+    
+    function getJobCards() { 
+        let data = localStorage.getItem('jobcards');
+        if (!data) { checkAndRecoverData(); data = localStorage.getItem('jobcards'); }
+        return JSON.parse(data || '[]'); 
+    }
+    function saveJobCards(data) { saveWithBackup('jobcards', data); }
+    
+    function getGadgets() { 
+        let data = localStorage.getItem('gadgets');
+        if (!data) { checkAndRecoverData(); data = localStorage.getItem('gadgets'); }
+        return JSON.parse(data || '[]'); 
+    }
+    function saveGadgets(data) { saveWithBackup('gadgets', data); }
+    
+    function getCrops() { 
+        let data = localStorage.getItem('crops');
+        if (!data) { checkAndRecoverData(); data = localStorage.getItem('crops'); }
+        return JSON.parse(data || '[]'); 
+    }
+    function saveCrops(data) { saveWithBackup('crops', data); }
+    
+    function getActivities() { 
+        let data = localStorage.getItem('activities');
+        if (!data) { checkAndRecoverData(); data = localStorage.getItem('activities'); }
+        return JSON.parse(data || '[]'); 
+    }
+    function saveActivities(data) { saveWithBackup('activities', data); }
+    
+    let currentUser = null;
+    let currentPage = 'dashboard';
+    
+    function render() {
+        const app = document.getElementById('app');
+        if (!currentUser) {
+            app.innerHTML = renderLogin();
+            attachLoginEvents();
+        } else {
+            app.innerHTML = renderMain();
+            attachMainEvents();
+        }
+    }
+    
+    function renderLogin() {
+        // Login page - Clean with NO demo credentials visible
+        return `
+            <div class="login-page">
+                <div class="login-box">
+                    <div class="university-logo">🌾</div>
+                    <h1 style="color: #1e4b2e; margin-bottom: 5px;">Bugema University</h1>
+                    <p style="color: #666; margin-bottom: 20px;">Farm Management Information System</p>
+                    
+                    <div id="loginError" class="error"></div>
+                    <input type="text" id="username" placeholder="Username" autocomplete="off">
+                    <input type="password" id="password" placeholder="Password">
+                    <button id="loginBtn">🔐 Login to System</button>
+                    <div class="secure-footer">
+                        <p>🔒 Authorized Access Only</p>
+                        <p>Bugema University - FMIS</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function attachLoginEvents() {
+        document.getElementById('loginBtn')?.addEventListener('click', function() {
+            const username = document.getElementById('username').value.toLowerCase();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            // Valid credentials (not displayed to users)
+            if (username === 'emma' && password === '123') {
+                currentUser = { name: 'Emma Muweesi', role: 'admin', type: 'Admin', avatar: '👑' };
+                render();
+            } else if (username === 'moses' && password === '123') {
+                currentUser = { name: 'Moses Kafeero', role: 'farm_manager', type: 'Farm Manager', avatar: '🌾' };
+                render();
+            } else if (username === 'william' && password === '123') {
+                currentUser = { name: 'William Ssempala', role: 'instructor', type: 'Instructor', avatar: '📚' };
+                render();
+            } else if (username === 'kibirige' && password === '123') {
+                currentUser = { name: 'Kibirige John', role: 'student', type: 'Student', avatar: '👨‍🎓' };
+                render();
+            } else if (username === 'suzan' && password === '123') {
+                currentUser = { name: 'Suzan Namutebi', role: 'worker', type: 'Worker', avatar: '👷' };
+                render();
+            } else {
+                errorDiv.innerText = 'Invalid username or password. Access denied.';
+            }
+        });
+    }
+    
+    function renderMain() {
+        let menuItems = '';
+        if (currentUser.role === 'admin') {
+            menuItems = `
+                <button class="sidebar-item ${currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard">📊 Dashboard</button>
+                <button class="sidebar-item ${currentPage === 'students' ? 'active' : ''}" data-page="students">👨‍🎓 Students</button>
+                <button class="sidebar-item ${currentPage === 'workers' ? 'active' : ''}" data-page="workers">👷 Workers</button>
+                <button class="sidebar-item ${currentPage === 'jobcards' ? 'active' : ''}" data-page="jobcards">📋 Job Cards</button>
+                <button class="sidebar-item ${currentPage === 'gadgets' ? 'active' : ''}" data-page="gadgets">📱 Gadgets</button>
+                <button class="sidebar-item ${currentPage === 'crops' ? 'active' : ''}" data-page="crops">🌽 Crop Schedule</button>
+                <button class="sidebar-item ${currentPage === 'activities' ? 'active' : ''}" data-page="activities">📝 Activities</button>
+                <button class="sidebar-item ${currentPage === 'farmreport' ? 'active' : ''}" data-page="farmreport">📄 Farm Report</button>
+            `;
+        } else if (currentUser.role === 'farm_manager') {
+            menuItems = `
+                <button class="sidebar-item ${currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard">📊 Dashboard</button>
+                <button class="sidebar-item ${currentPage === 'workers' ? 'active' : ''}" data-page="workers">👷 Workers</button>
+                <button class="sidebar-item ${currentPage === 'jobcards' ? 'active' : ''}" data-page="jobcards">📋 Job Cards</button>
+                <button class="sidebar-item ${currentPage === 'crops' ? 'active' : ''}" data-page="crops">🌽 Crop Schedule</button>
+                <button class="sidebar-item ${currentPage === 'farmreport' ? 'active' : ''}" data-page="farmreport">📄 Farm Report</button>
+            `;
+        } else if (currentUser.role === 'instructor') {
+            menuItems = `
+                <button class="sidebar-item ${currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard">📊 Dashboard</button>
+                <button class="sidebar-item ${currentPage === 'students' ? 'active' : ''}" data-page="students">👨‍🎓 Students</button>
+                <button class="sidebar-item ${currentPage === 'activities' ? 'active' : ''}" data-page="activities">📝 Activities</button>
+                <button class="sidebar-item ${currentPage === 'farmreport' ? 'active' : ''}" data-page="farmreport">📄 Farm Report</button>
+            `;
+        } else if (currentUser.role === 'student') {
+            menuItems = `
+                <button class="sidebar-item ${currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard">📊 Dashboard</button>
+                <button class="sidebar-item ${currentPage === 'myactivities' ? 'active' : ''}" data-page="myactivities">📝 My Activities</button>
+                <button class="sidebar-item ${currentPage === 'farmreport' ? 'active' : ''}" data-page="farmreport">📄 Farm Report</button>
+            `;
+        } else if (currentUser.role === 'worker') {
+            menuItems = `
+                <button class="sidebar-item ${currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard">📊 Dashboard</button>
+                <button class="sidebar-item ${currentPage === 'myjobcards' ? 'active' : ''}" data-page="myjobcards">📋 My Job Cards</button>
+                <button class="sidebar-item ${currentPage === 'farmreport' ? 'active' : ''}" data-page="farmreport">📄 Farm Report</button>
+            `;
+        }
+        
+        return `
+            <div class="navbar">
+                <div class="navbar-left"><div class="nav-logo">🌾</div><h1>Bugema University FMIS</h1></div>
+                <div class="user-info"><div class="user-avatar">${currentUser.avatar}</div><span>${currentUser.name} (${currentUser.type})</span><button id="logoutBtn" class="logout-btn">🚪 Logout</button></div>
+            </div>
+            <div class="app-container">
+                <div class="sidebar">${menuItems}</div>
+                <div class="content">
+                    ${renderPageContent()}
+                </div>
+            </div>
+        `;
+    }
+    
+    function renderPageContent() {
+        switch(currentPage) {
+            case 'dashboard': return renderDashboard();
+            case 'students': return renderStudents();
+            case 'workers': return renderWorkers();
+            case 'jobcards': return renderJobCards();
+            case 'gadgets': return renderGadgets();
+            case 'crops': return renderCrops();
+            case 'activities': return renderActivities();
+            case 'myactivities': return renderMyActivities();
+            case 'myjobcards': return renderMyJobCards();
+            case 'farmreport': return renderFarmReport();
+            default: return renderDashboard();
+        }
+    }
+    
+    // Admin Dashboard with backup controls (only visible to admin)
+    function renderDashboard() {
+        const students = getStudents(), workers = getWorkers(), jobCards = getJobCards(), gadgets = getGadgets(), crops = getCrops(), activities = getActivities();
+        const pendingApprovals = jobCards.filter(j => j.status === 'pending').length;
+        const checkedOut = gadgets.filter(g => g.status === 'checked_out').length;
+        const totalAcres = crops.reduce((sum, c) => sum + (c.acres || 0), 0);
+        const lastSaved = localStorage.getItem('fmis_last_saved') || 'Never';
+        
+        let adminBackupSection = '';
+        if (currentUser.role === 'admin') {
+            adminBackupSection = `
+                <div class="admin-toolbar">
+                    <span style="font-weight:bold;">💾 System Data Management</span>
+                    <button class="btn-sm btn-backup" onclick="manualBackup()">📀 Backup Now</button>
+                    <button class="btn-sm btn-backup" onclick="exportData()">📤 Export Data</button>
+                    <button class="btn-sm btn-backup" onclick="importFile()">📥 Import Data</button>
+                    <div class="last-saved-badge">🕒 Last backup: ${lastSaved}</div>
+                </div>
+            `;
+        }
+        
+        return `${adminBackupSection}
+            <div class="card farm-image-card"><h2>🌾 Bugema University Crop Farm</h2><p>640 Acres Research Farm | Luweero District, Uganda</p><p style="margin-top: 10px;">"A Living Laboratory for Agricultural Excellence"</p></div>
+            <div class="card weather-card"><h3>🌤️ Live Weather - Luweero, Uganda</h3><div style="display: flex; gap: 25px; margin-top: 10px; flex-wrap: wrap;"><span>🌡️ Temperature: 26°C</span><span>💧 Humidity: 65%</span><span>🌬️ Wind: 5.2 m/s</span><span>☁️ Condition: Partly Cloudy</span><span>🌧️ Rainfall: 0 mm (last 24hr)</span></div></div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number">${students.length}</div><div>👨‍🎓 Students</div></div>
+                <div class="stat-card"><div class="stat-number">${workers.length}</div><div>👷 Workers</div></div>
+                <div class="stat-card"><div class="stat-number">${pendingApprovals}</div><div>📋 Pending Approvals</div></div>
+                <div class="stat-card"><div class="stat-number">${checkedOut}</div><div>📱 Gadgets Out</div></div>
+                <div class="stat-card"><div class="stat-number">${crops.length}</div><div>🌽 Active Crops</div></div>
+                <div class="stat-card"><div class="stat-number">${totalAcres}</div><div>🌾 Cultivated Acres</div></div>
+                <div class="stat-card"><div class="stat-number">${activities.filter(a => a.status === 'completed').length}</div><div>✅ Completed Activities</div></div>
+            </div>
+            <div class="card"><h3>📋 Recent Job Cards</h3>${renderJobCardsTable(jobCards.slice(0, 5))}</div>`;
+    }
+    
+    function renderJobCardsTable(jobCards) {
+        const workers = getWorkers();
+        let rows = '';
+        jobCards.forEach(j => { const worker = workers.find(w => w.id === j.workerId); rows += `<tr><td>${j.cardNo}</td><td>${worker ? worker.name : 'Unknown'}</td><td>${j.task.substring(0, 40)}...</td><td>UGX ${j.total.toLocaleString()}</td><td><span class="status-${j.status}">${j.status}</span></td>`; });
+        return `<table><thead><tr><th>Card #</th><th>Worker</th><th>Task</th><th>Total</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+    
+    function renderStudents() { const students = getStudents(); let rows = ''; students.forEach(s => { rows += `<tr><td>${s.name}</td><td>${s.program}</td><td>${s.year}</td><td>${s.phone}</td><td>${s.regDate}</td><td><button class="btn-danger btn-sm" onclick="deleteStudent(${s.id})">Delete</button></td>`; }); return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;"><h2>👨‍🎓 Student Registration</h2><button class="btn" onclick="showAddStudentForm()">+ Add Student</button></div><div id="addStudentForm" style="display:none;" class="card"><h3>Add New Student</h3><input type="text" id="studentName" placeholder="Full Name"><input type="text" id="studentProgram" placeholder="Program"><input type="number" id="studentYear" placeholder="Year"><input type="text" id="studentPhone" placeholder="Phone"><button class="btn" onclick="addStudent()">Save</button><button class="btn-danger btn" onclick="hideAddStudentForm()">Cancel</button></div><div class="card"><table><thead><tr><th>Name</th><th>Program</th><th>Year</th><th>Phone</th><th>Reg Date</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+    function renderWorkers() { const workers = getWorkers(); let rows = ''; workers.forEach(w => { rows += `<tr><td>${w.name}</td><td>${w.title}</td><td>UGX ${w.rate.toLocaleString()}/hr</td><td>${w.phone}</td><td>${w.hireDate}</td><td><button class="btn-danger btn-sm" onclick="deleteWorker(${w.id})">Delete</button></td>`; }); return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;"><h2>👷 Farm Workers</h2><button class="btn" onclick="showAddWorkerForm()">+ Add Worker</button></div><div id="addWorkerForm" style="display:none;" class="card"><h3>Add New Worker</h3><input type="text" id="workerName" placeholder="Full Name"><input type="text" id="workerTitle" placeholder="Job Title"><input type="number" id="workerRate" placeholder="Hourly Rate (UGX)"><input type="text" id="workerPhone" placeholder="Phone"><button class="btn" onclick="addWorker()">Save</button><button class="btn-danger btn" onclick="hideAddWorkerForm()">Cancel</button></div><div class="card"><table><thead><tr><th>Name</th><th>Title</th><th>Rate</th><th>Phone</th><th>Hire Date</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+    function renderJobCards() { const jobCards = getJobCards(), workers = getWorkers(); let rows = ''; jobCards.forEach(j => { const worker = workers.find(w => w.id === j.workerId); rows += `<tr><td>${j.cardNo}</td><td>${worker ? worker.name : 'Unknown'}</td><td>${j.task.substring(0, 40)}...</td><td>${j.hours}</td><td>UGX ${j.total.toLocaleString()}</td><td><span class="status-${j.status}">${j.status}</span></td><td>${j.date}</td><td>${(j.status === 'pending' && (currentUser.role === 'admin' || currentUser.role === 'farm_manager')) ? `<button class="btn-sm" style="background:#28a745;color:white;" onclick="approveJobCard(${j.id})">Approve</button>` : '-'}</td>`; }); let workerOpts = '<option value="">Select Worker</option>'; workers.forEach(w => { workerOpts += `<option value="${w.id}">${w.name} (UGX ${w.rate}/hr)</option>`; }); return `<div style="display:flex;justify-content:space-between;align-items:center;"><h2>📋 Job Cards</h2><button class="btn" onclick="showAddJobCardForm()">+ Create Job Card</button></div><div id="addJobCardForm" style="display:none;" class="card"><h3>Create Job Card</h3><select id="jobWorkerId">${workerOpts}</select><textarea id="jobTask" rows="3" placeholder="Task Description"></textarea><input type="date" id="jobDate"><input type="number" id="jobHours" placeholder="Hours"><button class="btn" onclick="addJobCard()">Create</button><button class="btn-danger btn" onclick="hideAddJobCardForm()">Cancel</button></div><div class="card"><table><thead><tr><th>Card#</th><th>Worker</th><th>Task</th><th>Hours</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+    function renderGadgets() { const gadgets = getGadgets(); let rows = ''; gadgets.forEach(g => { rows += `<tr><td>${g.code}</td><td>${g.name}</td><td>${g.type}</td><td>${g.location}</td><td>${g.lastCalibration}</td><td><span class="status-${g.status}">${g.status}</span></td><td><button class="btn-sm" style="background:#17a2b8;" onclick="toggleGadgetStatus(${g.id})">${g.status === 'available' ? 'Check Out' : 'Return'}</button></td>`; }); return `<div style="display:flex;justify-content:space-between;"><h2>📱 Gadgets</h2><button class="btn" onclick="showAddGadgetForm()">+ Add Gadget</button></div><div id="addGadgetForm" style="display:none;" class="card"><h3>New Gadget</h3><input id="gadgetName" placeholder="Name"><select id="gadgetType"><option>Scale</option><option>Meter</option><option>GPS</option></select><input id="gadgetLocation" placeholder="Location"><button class="btn" onclick="addGadget()">Add</button><button class="btn-danger" onclick="hideAddGadgetForm()">Cancel</button></div><div class="card"><table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Location</th><th>Calibration</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+    function renderCrops() { const crops = getCrops(); let rows = '', totalAcres = 0; crops.forEach(c => { totalAcres += c.acres; rows += `<tr><td>${c.crop}</td><td>${c.variety}</td><td>${c.field}</td><td>${c.acres}</td><td>${c.plantingDate}</td><td>${c.harvestDate}</td><td>${c.expectedYield.toLocaleString()} kg</td><td>${c.status}</td>`; }); return `<h2>🌽 Crop Scheduling</h2><button class="btn" onclick="showAddCropForm()">+ Add Crop</button><div id="addCropForm" style="display:none;" class="card"><input id="cropName" placeholder="Crop"><input id="cropVariety" placeholder="Variety"><input id="cropField" placeholder="Field"><input id="cropAcres" placeholder="Acres"><input type="date" id="plantingDate"><input type="date" id="harvestDate"><input id="expectedYield" placeholder="Expected Yield kg"><button class="btn" onclick="addCrop()">Save</button><button class="btn-danger" onclick="hideAddCropForm()">Cancel</button></div><div class="card"><div style="background:#e8f5e9;margin-bottom:15px;"><strong>Total Land: ${totalAcres} acres | Crops: ${crops.length}</strong></div><table><thead><tr><th>Crop</th><th>Variety</th><th>Field</th><th>Acres</th><th>Planting</th><th>Harvest</th><th>Expected Yield</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+    function renderActivities() { const activities = getActivities(), students = getStudents(); let rows = ''; activities.forEach(a => { const s = students.find(s=>s.id===a.studentId); rows += `<tr><td>${s?.name||'Unknown'}</td><td>${a.title}</td><td>${a.description}</td><td>${a.dueDate}</td><td><span class="status-${a.status === 'completed' ? 'approved' : 'pending'}">${a.status}</span></td><td>${a.grade||'-'}</td>`; }); let stdOpts = '<option value="">Select Student</option>'; students.forEach(s=>{stdOpts+=`<option value="${s.id}">${s.name}</option>`;}); return `<h2>📝 Student Activities</h2><button class="btn" onclick="showAddActivityForm()">+ Assign Activity</button><div id="addActivityForm" style="display:none;" class="card"><select id="activityStudentId">${stdOpts}</select><input id="activityTitle" placeholder="Title"><textarea id="activityDesc" rows="2"></textarea><input type="date" id="activityDueDate"><button class="btn" onclick="addActivity()">Assign</button><button class="btn-danger" onclick="hideAddActivityForm()">Cancel</button></div><div class="card"><table><thead><tr><th>Student</th><th>Activity</th><th>Description</th><th>Due Date</th><th>Status</th><th>Grade</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+    function renderMyActivities() { const activities = getActivities(), students = getStudents(); const curr = students.find(s => s.name.toLowerCase().includes('kibirige')); let rows=''; if(curr){ const myActs = activities.filter(a=>a.studentId===curr.id); myActs.forEach(a=>{rows+=`<tr><td>${a.title}</td><td>${a.description}</td><td>${a.dueDate}</td><td><span class="status-${a.status === 'completed' ? 'approved' : 'pending'}">${a.status}</span></td>`;});} return `<h2>📝 My Activities</h2><div class="card">${rows?`<table><thead><tr><th>Activity</th><th>Description</th><th>Due Date</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`:'<p>No activities assigned.</p>'}</div>`; }
+    function renderMyJobCards() { const jobCards = getJobCards(), workers = getWorkers(); const curr = workers.find(w=>w.name.toLowerCase().includes('suzan')); let rows=''; if(curr){ const myCards = jobCards.filter(j=>j.workerId===curr.id); myCards.forEach(j=>{rows+=`<tr><td>${j.cardNo}</td><td>${j.task}</td><td>${j.hours} hrs</td><td>UGX ${j.total.toLocaleString()}</td><td>${j.date}</td><td><span class="status-${j.status}">${j.status}</span></td>`;});} return `<h2>📋 My Job Cards</h2><div class="card">${rows?`<table><thead><tr><th>Card#</th><th>Task</th><th>Hours</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`:'<p>No job cards.</p>'}</div>`; }
+    
+    function renderFarmReport() { const crops=getCrops(), workers=getWorkers(), jobCards=getJobCards(), students=getStudents(), activities=getActivities(); const totalAcres = crops.reduce((s,c)=>s+(c.acres||0),0), totalExpected=crops.reduce((s,c)=>s+(c.expectedYield||0),0), totalPaid=jobCards.filter(j=>j.status==='approved').reduce((s,j)=>s+(j.total||0),0); let cropsRows='', workersRows=''; crops.forEach(c=>{cropsRows+=`<tr><td>${c.crop}</td><td>${c.variety}</td><td>${c.field}</td><td>${c.acres}</td><td>${c.plantingDate}</td><td>${c.harvestDate}</td><td>${c.expectedYield.toLocaleString()} kg</td><td>${c.status}</td></tr>`;}); workers.forEach(w=>{const wJobs=jobCards.filter(j=>j.workerId===w.id && j.status==='approved'); const earned=wJobs.reduce((s,j)=>s+(j.total||0),0); workersRows+=`<tr><td>${w.name}</td><td>${w.title}</td><td>UGX ${w.rate.toLocaleString()}</td><td>${wJobs.length}</td><td>UGX ${earned.toLocaleString()}</td></tr>`;}); return `<div class="report-container" id="reportContainer"><div class="report-header"><div class="report-logo">🌾</div><h1>BUGEMA UNIVERSITY</h1><h2>Crop Farm Management Report</h2><p>Report Date: ${new Date().toLocaleDateString()} | Prepared By: ${currentUser.name}</p></div><h3>📊 EXECUTIVE SUMMARY</h3><table class="report-table"><tr><td><strong>Total Land</strong></td><td>${totalAcres} Acres</td><td><strong>Active Crops</strong></td><td>${crops.length}</td></tr><tr><td><strong>Expected Yield</strong></td><td>${totalExpected.toLocaleString()} kg</td><td><strong>Total Workers</strong></td><td>${workers.length}</td></tr><tr><td><strong>Total Students</strong></td><td>${students.length}</td><td><strong>Total Payments</strong></td><td>UGX ${totalPaid.toLocaleString()}</td></tr><tr><td><strong>Completed Activities</strong></td><td colspan="3">${activities.filter(a=>a.status==='completed').length} / ${activities.length}</td></tr></table><h3>🌽 CROP SUMMARY</h3><table class="report-table"><thead><tr><th>Crop</th><th>Variety</th><th>Field</th><th>Acres</th><th>Planting</th><th>Harvest</th><th>Expected Yield</th><th>Status</th></tr></thead><tbody>${cropsRows}</tbody></table><h3>👷 LABOUR FINANCIAL</h3><table class="report-table"><thead><tr><th>Worker</th><th>Position</th><th>Rate</th><th>Job Cards</th><th>Total Earned</th></tr></thead><tbody>${workersRows}<tr style="background:#f0f2f5;font-weight:bold;"><td colspan="4">GRAND TOTAL</td><td>UGX ${totalPaid.toLocaleString()}</td></tr></tbody></table><div style="text-align:center; margin-top:30px;"><p>Bugema University - FMIS © ${new Date().getFullYear()}</p></div></div><div style="text-align:right;"><button class="btn btn-print" onclick="printReport()">🖨️ Print / PDF</button></div>`; }
+    
+    window.printReport = function() { const content = document.getElementById('reportContainer'); const win = window.open('','_blank'); win.document.write(`<html><head><title>Bugema Farm Report</title><style>body{font-family:Arial;padding:20px;}table{border-collapse:collapse;width:100%;}th,td{border:1px solid #ddd;padding:8px;}th{background:#1e4b2e;color:white;}</style></head><body>${content.outerHTML}</body></html>`); win.document.close(); win.print(); };
+    
+    window.manualBackup = function() { createBackup(); alert('Backup created successfully! Data saved at: ' + new Date().toLocaleString()); render(); };
+    window.exportData = function() { exportData(); };
+    window.importFile = function() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = function(e) { if (e.target.files[0]) importData(e.target.files[0]); }; input.click(); };
+    
+    window.showAddStudentForm=function(){document.getElementById('addStudentForm').style.display='block';}; window.hideAddStudentForm=function(){document.getElementById('addStudentForm').style.display='none';}; window.addStudent=function(){const s=getStudents(); s.push({id:Date.now(),name:document.getElementById('studentName').value,program:document.getElementById('studentProgram').value,year:parseInt(document.getElementById('studentYear').value)||1,phone:document.getElementById('studentPhone').value,regDate:new Date().toISOString().split('T')[0]}); saveStudents(s); hideAddStudentForm(); render();}; window.deleteStudent=function(id){if(confirm('Delete?')){saveStudents(getStudents().filter(s=>s.id!==id)); render();}};
+    window.showAddWorkerForm=function(){document.getElementById('addWorkerForm').style.display='block';}; window.hideAddWorkerForm=function(){document.getElementById('addWorkerForm').style.display='none';}; window.addWorker=function(){const w=getWorkers(); w.push({id:Date.now(),name:document.getElementById('workerName').value,title:document.getElementById('workerTitle').value,rate:parseInt(document.getElementById('workerRate').value),phone:document.getElementById('workerPhone').value,hireDate:new Date().toISOString().split('T')[0]}); saveWorkers(w); hideAddWorkerForm(); render();}; window.deleteWorker=function(id){if(confirm('Delete?')){saveWorkers(getWorkers().filter(w=>w.id!==id)); render();}};
+    window.showAddJobCardForm=function(){document.getElementById('addJobCardForm').style.display='block';}; window.hideAddJobCardForm=function(){document.getElementById('addJobCardForm').style.display='none';}; window.addJobCard=function(){const wid=parseInt(document.getElementById('jobWorkerId').value); const w=getWorkers().find(w=>w.id===wid); const hrs=parseFloat(document.getElementById('jobHours').value); const total=w?hrs*w.rate:0; const cards=getJobCards(); cards.push({id:Date.now(),cardNo:'JC'+Date.now(),workerId:wid,task:document.getElementById('jobTask').value,hours:hrs,total:total,status:'pending',date:document.getElementById('jobDate').value||new Date().toISOString().split('T')[0],approvedBy:null,approvedDate:null}); saveJobCards(cards); hideAddJobCardForm(); render();}; window.approveJobCard=function(id){const cards=getJobCards().map(j=>j.id===id?{...j,status:'approved',approvedBy:currentUser.name,approvedDate:new Date().toISOString().split('T')[0]}:j); saveJobCards(cards); render();};
+    window.showAddGadgetForm=function(){document.getElementById('addGadgetForm').style.display='block';}; window.hideAddGadgetForm=function(){document.getElementById('addGadgetForm').style.display='none';}; window.addGadget=function(){const g=getGadgets(); g.push({id:Date.now(),code:'G'+Date.now(),name:document.getElementById('gadgetName').value,type:document.getElementById('gadgetType').value,status:'available',location:document.getElementById('gadgetLocation').value,lastCalibration:new Date().toISOString().split('T')[0]}); saveGadgets(g); hideAddGadgetForm(); render();}; window.toggleGadgetStatus=function(id){const g=getGadgets().map(g=>g.id===id?{...g,status:g.status==='available'?'checked_out':'available'}:g); saveGadgets(g); render();};
+    window.showAddCropForm=function(){document.getElementById('addCropForm').style.display='block';}; window.hideAddCropForm=function(){document.getElementById('addCropForm').style.display='none';}; window.addCrop=function(){const c=getCrops(); c.push({id:Date.now(),crop:document.getElementById('cropName').value,variety:document.getElementById('cropVariety').value,field:document.getElementById('cropField').value,acres:parseFloat(document.getElementById('cropAcres').value),plantingDate:document.getElementById('plantingDate').value,harvestDate:document.getElementById('harvestDate').value,expectedYield:parseFloat(document.getElementById('expectedYield').value),actualYield:null,status:'Growing'}); saveCrops(c); hideAddCropForm(); render();};
+    window.showAddActivityForm=function(){document.getElementById('addActivityForm').style.display='block';}; window.hideAddActivityForm=function(){document.getElementById('addActivityForm').style.display='none';}; window.addActivity=function(){const acts=getActivities(); acts.push({id:Date.now(),studentId:parseInt(document.getElementById('activityStudentId').value),title:document.getElementById('activityTitle').value,description:document.getElementById('activityDesc').value,dueDate:document.getElementById('activityDueDate').value,status:'pending',grade:null}); saveActivities(acts); hideAddActivityForm(); render();};
+    
+    function attachMainEvents() { document.getElementById('logoutBtn')?.addEventListener('click',()=>{currentUser=null; render();}); document.querySelectorAll('.sidebar-item').forEach(btn=>{btn.addEventListener('click',function(){currentPage=this.getAttribute('data-page'); render();});}); }
+    render();
+</script>
+</body>
+</html>
